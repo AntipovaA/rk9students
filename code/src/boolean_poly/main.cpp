@@ -1,5 +1,3 @@
-
-
 #include <vector>
 #include "common/PolyModel.h"
 #include "common/Point.h"
@@ -7,13 +5,16 @@
 using namespace std;
 using namespace rk9;
 
-vector<Point>* Intersect(PolyModel, PolyModel);
+// Поиск пересечения двух многогранников
+// model_a, model_b - исходные параметры
+// Возвращает координаты точек, образующих контур пересечения
+vector<Point> GetIntersectionPoints(PolyModel model_a, PolyModel model_b);
+
 void IntersectTriangles(vector<Point> *, vector<Point> *, vector<Point> *);
 void IntersectEdgeTriangle(Point, Point, vector<Point> *, double *, vector<Point> *);
 bool IsPointInsideTriangle(Point, vector<Point>*);
 double TriangleArea(double, double, double);
 bool IsPlaneBetweenTriangle(vector<Point> *, vector<Point> *);
-double* GetTriangleNormal(vector<Point> *);
 
 const double EPSILON = 1E-10;
 
@@ -21,48 +22,48 @@ int main(int argc, char ** argv) {
 
 	PolyModel model_a, model_b;
 
-	vector<Point> *intersection_points = Intersect(model_a, model_b);
+	vector<Point> intersection_points = GetIntersectionPoints(model_a, model_b);
 
 	return 0;
 }
 
-vector<Point>* Intersect(PolyModel model_a, PolyModel model_b) {
+vector<Point> GetIntersectionPoints(PolyModel model_a, PolyModel model_b) {
 
-	vector<Point> *points = new vector<Point>;
+	vector<Point> points;
 
 	unsigned triangles_count_A = model_a.GetTrianglesCount();
 	unsigned triangles_count_B = model_b.GetTrianglesCount();
 
 	for (unsigned i = 0; i < triangles_count_A; i++) {
 
-		vector<Point> *points_of_triangle_i = model_a.GetTriangleVertices(i);
-
+		vector<Point> points_of_triangle_i = model_a.GetTriangleVertices(i);
 		for (unsigned j = 0; j < triangles_count_B; j++) {
 
-			vector<Point> *points_of_triangle_j = model_b.GetTriangleVertices(j);
+			vector<Point> points_of_triangle_j = model_b.GetTriangleVertices(j);
 
-			IntersectTriangles(points_of_triangle_i, points_of_triangle_j, points); //points of intersection of 2 triangles
+			//points of intersection of 2 triangles
+			IntersectTriangles(points_of_triangle_i, points_of_triangle_j, points); 
 
 		}
 	}
 	return points;
 }
 
-void IntersectTriangles(vector<Point> *points_of_triangle_i, vector<Point> *points_of_triangle_j, vector<Point> *points) {
+void IntersectTriangles(vector<Point> points_of_triangle_i, vector<Point> points_of_triangle_j, vector<Point> points) {
 
 	if (IsPlaneBetweenTriangle(points_of_triangle_i, points_of_triangle_j) == false) {
 
 		double *normal = GetTriangleNormal(points_of_triangle_j); //find parameters A,B,C,D of normal
 
-		IntersectEdgeTriangle(points_of_triangle_i->at(0), points_of_triangle_i->at(1), points_of_triangle_j, normal, points);  //finding the intersection between the edge of 
-		IntersectEdgeTriangle(points_of_triangle_i->at(0), points_of_triangle_i->at(2), points_of_triangle_j, normal, points);  //one triangle and plane of another
-		IntersectEdgeTriangle(points_of_triangle_i->at(1), points_of_triangle_i->at(2), points_of_triangle_j, normal, points);
+		IntersectEdgeTriangle(points_of_triangle_i.at(0), points_of_triangle_i.at(1), points_of_triangle_j, normal, points);  //finding the intersection between the edge of 
+		IntersectEdgeTriangle(points_of_triangle_i.at(0), points_of_triangle_i.at(2), points_of_triangle_j, normal, points);  //one triangle and plane of another
+		IntersectEdgeTriangle(points_of_triangle_i.at(1), points_of_triangle_i.at(2), points_of_triangle_j, normal, points);
 
 		normal = GetTriangleNormal(points_of_triangle_i);
 
-		IntersectEdgeTriangle(points_of_triangle_j->at(0), points_of_triangle_j->at(1), points_of_triangle_i, normal, points);
-		IntersectEdgeTriangle(points_of_triangle_j->at(0), points_of_triangle_j->at(2), points_of_triangle_i, normal, points);
-		IntersectEdgeTriangle(points_of_triangle_j->at(1), points_of_triangle_j->at(2), points_of_triangle_i, normal, points);
+		IntersectEdgeTriangle(points_of_triangle_j.at(0), points_of_triangle_j.at(1), points_of_triangle_i, normal, points);
+		IntersectEdgeTriangle(points_of_triangle_j.at(0), points_of_triangle_j.at(2), points_of_triangle_i, normal, points);
+		IntersectEdgeTriangle(points_of_triangle_j.at(1), points_of_triangle_j.at(2), points_of_triangle_i, normal, points);
 	}
 
 }
@@ -141,25 +142,4 @@ bool IsPlaneBetweenTriangle(vector<Point> *tr1, vector<Point> *tr2) {
 
 		return true;
 
-}
-//find parameters A,B,C,D of normal.
-double* GetTriangleNormal(vector<Point> *tr) {
-
-	double *params = new double[4];
-
-	//find coordinates of vectors of triangle's vertices
-	double p12x = tr->at(1).X - tr->at(0).X; 
-	double p12y = tr->at(1).Y - tr->at(0).Y;
-	double p12z = tr->at(1).Z - tr->at(0).Z;
-
-	double p13x = tr->at(2).X - tr->at(0).X;
-	double p13y = tr->at(2).Y - tr->at(0).Y;
-	double p13z = tr->at(2).Z - tr->at(0).Z;
-
-	params[0] = p12y*p13z - p13y*p12z;
-	params[1] = -p12x*p13z + p13x*p12z;
-	params[2] = p12x*p13y - p13x*p12z;
-	params[3] = -params[0] * tr->at(1).X - params[1] * tr->at(1).Y - params[2] * tr->at(1).Z;
-
-	return params;
 }

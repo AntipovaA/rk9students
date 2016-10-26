@@ -56,16 +56,8 @@ namespace rk9
 			pt3.Y = coordinates[7];
 			pt3.Z = coordinates[8];
 
-			Points.push_back(pt1);
-			Points.push_back(pt2);
-			Points.push_back(pt3);
-			
-			Triangle tr;
-			tr.V[0] = i * 3;
-			tr.V[1] = i * 3 + 1;
-			tr.V[2] = i * 3 + 2;
+			AddTriangle(pt1, pt2, pt3);
 
-			Triangles.push_back(tr);
 		}
 
 		return 0;
@@ -95,25 +87,23 @@ namespace rk9
 
 			// Запишем координаты треугольника
 			float coordinates[9];
-			Point pt1, pt2, pt3;
 			Triangle tr;
 
 			tr = Triangles[i];
-			pt1 = Points[tr.V[0]];
-			pt2 = Points[tr.V[1]];
-			pt3 = Points[tr.V[2]];
+	
+			vector<Point> pts = GetTriangleVertices(i);
 
-			coordinates[0] = static_cast<float>(pt1.X);
-			coordinates[1] = static_cast<float>(pt1.Y);
-			coordinates[2] = static_cast<float>(pt1.Z);
-						   	 
-			coordinates[3] = static_cast<float>(pt2.X);
-			coordinates[4] = static_cast<float>(pt2.Y);
-			coordinates[5] = static_cast<float>(pt2.Z);
-						   	 
-			coordinates[6] = static_cast<float>(pt3.X);
-			coordinates[7] = static_cast<float>(pt3.Y);
-			coordinates[8] = static_cast<float>(pt3.Z);
+			coordinates[0] = static_cast<float>(pts[1].X);
+			coordinates[1] = static_cast<float>(pts[1].Y);
+			coordinates[2] = static_cast<float>(pts[1].Z);
+						   	 						 
+			coordinates[3] = static_cast<float>(pts[2].X);
+			coordinates[4] = static_cast<float>(pts[2].Y);
+			coordinates[5] = static_cast<float>(pts[2].Z);
+						   	 					 
+			coordinates[6] = static_cast<float>(pts[3].X);
+			coordinates[7] = static_cast<float>(pts[3].Y);
+			coordinates[8] = static_cast<float>(pts[3].Z);
 
 			fout.write(reinterpret_cast<char *>(coordinates), 9 * sizeof(float));
 
@@ -148,19 +138,17 @@ namespace rk9
 		return Triangles.size();
 	}
 
-	//return the massive with 3 points of needed triangle, j is the index of triangle
-	vector<Point>* PolyModel::GetTriangleVertices(unsigned j) {
+	//Возвращает массив вершин треугольника под индексом index
+	//Если треугольника с таким индексом нет, возвращает пустой массив
+	vector<Point> PolyModel::GetTriangleVertices(unsigned index) {
 
-		if (j > Points.size() * 3)
-			return 0;
+		vector<Point> points;
 
-		vector<Point> *points = new vector<Point>;
-
-		points->push_back(Points[j * 3]);
-		points->push_back(Points[j * 3+1]);
-		points->push_back(Points[j * 3+2]);
-		
+		if (index <= GetTrianglesCount()) {
+			points.push_back(Points[index * 3]);
+			points.push_back(Points[index * 3 + 1]);
+			points.push_back(Points[index * 3 + 2]);
+		}
 		return points;
 	}
-	
 }

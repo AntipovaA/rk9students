@@ -42,6 +42,7 @@ set(headers
 set(sources
     ${source_path}/Plane.cpp
 	${source_path}/PolyModel.cpp
+	${source_path}/Triangle.cpp
 )
 
 # Group source files
