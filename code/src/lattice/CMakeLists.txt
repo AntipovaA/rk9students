@@ -24,10 +24,13 @@ message(STATUS "App: ${target}")
 set(sources
     main.cpp
     fparser.cpp
+	RectLattice.cpp
 )
 
 set(headers
     fparser.h
+	RectLattice.h
+	PointWithDensity.h
 )
 
 # 
