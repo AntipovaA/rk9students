@@ -7,55 +7,122 @@ namespace rk9 {
 	class UnitCell {
 
 	public:
-		virtual double Eval() {
-			return 0.0;
-		};
+		virtual double Eval(double x, double y, double z) = 0;
 	};
 
+	class SchwarzPrimitive : public UnitCell {
 
-	class Schwarz_Primitive : public UnitCell {
+	private: const int type = 0;
+	public: double A, K;
+	
+			 SchwarzPrimitive() :
+				 A(1.0),
+				 K(1.0) {};
 
-	public:
+			 SchwarzPrimitive(double a) :
+				 A(a),
+				 K(1.0) {};
+
+			 SchwarzPrimitive(double a, double k) :
+				 A(a),
+				 K(k) {};
+				
 		double Eval(double x, double y, double z) {
-			return (cos(x) + cos(y) + cos(z) - 1);
+			return (cos(A*x) + cos(A*y) + cos(A*z) - K);
 		}
 	};
 
 
-	class Schwarz_Primitive_pinched : public UnitCell {
+	class SchwarzPrimitivePinched : public UnitCell {
 
-	public:
+	private: const int type = 1;
+	public: double A, K;
+
+			SchwarzPrimitivePinched() :
+				A(1.0),
+				K(0.0) {};
+
+			SchwarzPrimitivePinched(double a) :
+				A(a),
+				K(0.0) {};
+
+			SchwarzPrimitivePinched(double a, double k) :
+				A(a),
+				K(k) {};
+
 		double Eval(double x, double y, double z) {
-			return (-(2.25*(cos(x) + cos(y) + cos(z)) + 1.25*(cos(x)*cos(y) + cos(y)*cos(z) + cos(z)*cos(x))));
+			return (-(2.25*(cos(A*x) + cos(A*y) + cos(A*z)) + 1.25*(cos(A*x)*cos(A*y) + cos(A*y)*cos(A*z) + cos(A*z)*cos(A*x))) - K);
 		}
 	};
 
 
-	class Schoen_Gyroid : public UnitCell {
+	class SchoenGyroid : public UnitCell {
 
-	public:
+	private: const int type = 2;
+	public: double A, K;
+
+			SchoenGyroid() :
+				A(1.0),
+				K(0.0) {};
+
+			SchoenGyroid(double a) :
+				A(a),
+				K(0.0) {};
+
+			SchoenGyroid(double a, double k) :
+				A(a),
+				K(k) {};
+
 		double Eval(double x, double y, double z) {
-			return (10 * (cos(x)*sin(y) + cos(y)*sin(z) + cos(z)*sin(x))
-				- 0.5*(cos(2 * x)*cos(2 * y) + cos(2 * y)*cos(2 * z) + cos(2 * z)*cos(2 * x)));
+			return (10 * (cos(A*x)*sin(A*y) + cos(A*y)*sin(A*z) + cos(A*z)*sin(A*x))
+				- 0.5*(cos(A * 2 * x)*cos(A * 2 * y) + cos(A * 2 * y)*cos(A * 2 * z) + cos(A * 2 * z)*cos(A * 2 * x)) - K);
 		}
 	};
 
 
-	class Schwarz_W : public UnitCell {
+	class SchwarzW : public UnitCell {
 
-	public:
+	private: const int type = 3;
+	public: double A, K;
+
+			SchwarzW() :
+				A(1.0),
+				K(14.0) {};
+
+			SchwarzW(double a) :
+				A(a),
+				K(14.0) {};
+
+			SchwarzW(double a, double k) :
+				A(a),
+				K(k) {};
+
 		double Eval(double x, double y, double z) {
-			return (10 * (cos(x)*cos(y) + cos(y)*cos(z) + cos(z)*cos(x))
-				- 5 * (cos(2 * x) + cos(2 * y) + cos(2 * z)) - 14);
+			return (10 * (cos(A*x)*cos(A*y) + cos(A*y)*cos(A*z) + cos(A*z)*cos(A*x))
+				- 5 * (cos(A * 2 * x) + cos(A * 2 * y) + cos(A * 2 * z)) - K);
 		}
 	};
 
-	class Neovius_Surface : public UnitCell {
+	class NeoviusSurface : public UnitCell {
 
-	public:
+	private: const int type = 4;
+	public: double A, K;
+
+			NeoviusSurface() :
+				A(1.0),
+				K(0.0) {};
+
+			NeoviusSurface(double a) :
+				A(a),
+				K(0.0) {};
+
+			NeoviusSurface(double a, double k) :
+				A(a),
+				K(k) {};
+
 		double Eval(double x, double y, double z) {
-			return (-(-sin(x)*sin(y)*sin(z) + sin(2 * x)*sin(y) + sin(2 * y)*sin(z) + sin(x)*sin(2 * z)
-				- cos(x)*cos(y)*cos(z) + sin(2 * x)*cos(z) + cos(x)*sin(2 * y) + cos(y)*sin(2 * z)));
+			return (-(-sin(A*x)*sin(A*y)*sin(A*z) + sin(A * 2 * x)*sin(A*y) + sin(A * 2 * y)*sin(A*z) + sin(A*x)*sin(A * 2 * z)
+				- cos(A*x)*cos(A*y)*cos(A*z) + sin(A * 2 * x)*cos(A*z) + cos(A*x)*sin(A * 2 * y) + cos(A*y)*sin(A * 2 * z)) - K);
 		}
 	};
 }

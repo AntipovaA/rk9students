@@ -1,3 +1,10 @@
+/***************************************************************************\
+|* Function parser v2.62 by Warp                                           *|
+|* http://www.students.tut.fi/~warp/FunctionParser/                        *|
+|* -----------------------------                                           *|
+|* Parses and evaluates the given function with the given variable values. *|
+|*                                                                         *|
+\***************************************************************************/
 
 #ifndef ONCE_FPARSER_H_
 #define ONCE_FPARSER_H_

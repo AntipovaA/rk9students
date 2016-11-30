@@ -1,4 +1,8 @@
-﻿
+﻿//===============================
+// Function parser v2.62 by Warp
+// http://www.students.tut.fi/~warp/FunctionParser/
+//===============================
+
 // Comment out the following line if your compiler supports the (non-standard)
 // asinh, acosh and atanh functions and you want them to be supported. If
 // you are not sure, just leave it (those function will then not be supported).

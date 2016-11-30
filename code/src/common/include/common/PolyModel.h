@@ -17,7 +17,7 @@ namespace rk9
 
 	public:
 		int ReadFromSTLFile(char * filename);
-		int WriteToSTLFile(char * filename);
+		int WriteToSTLFile(const char * filename);
 
 		void AddTriangle(Point p1, Point p2, Point p3);
 		void AddTriangle(Triangle t);

@@ -61,7 +61,7 @@ namespace rk9
 		return 0;
 	}
 
-	int PolyModel::WriteToSTLFile(char * filename) {
+	int PolyModel::WriteToSTLFile(const char * filename) {
 		
 		ofstream fout(filename, ios_base::binary);
 		if (!fout) {

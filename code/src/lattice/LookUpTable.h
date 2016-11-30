@@ -1,11 +1,18 @@
+/**
+* @file    LookUpTable.h
+* @author  Thomas Lewiner <thomas.lewiner@polytechnique.org>
+* @author  Math Dept, PUC-Rio
+* @version 0.2
+* @date    12/08/2002
+*
+* @brief   LookUpTable for the MarchingCubes 33 Algorithm
+*/
+//________________________________________________
+
 #ifndef _LOOKUPTABLE_H_
 #define _LOOKUPTABLE_H_
 
-
-
-
-
-	//_____________________________________________________________________________
+//_____________________________________________________________________________
 	/**
 	* \brief case mapping
 	* For each of the possible vertex states listed in this table there is a

@@ -1,3 +1,13 @@
+/**
+* @file    MarchingCubes.h
+* @author  Thomas Lewiner <thomas.lewiner@polytechnique.org>
+* @author  Math Dept, PUC-Rio
+* @version 0.2
+* @date    12/08/2002
+*
+* @brief   MarchingCubes Algorithm
+*/
+//________________________________________________
 
 #ifndef _MARCHINGCUBES_H_
 #define _MARCHINGCUBES_H_
@@ -31,6 +41,7 @@ public:
 	glm::ivec3 size() const { return size_; }
 	inline void SetAlgorithm(Algorithm algorithm) { algorithm_ = algorithm; }
 	void Setup();
+	void FreeUnusedArrays();
 	void run(float iso = 0.f);
 
 	inline const float get_data(const glm::ivec3 &grid_coord) const

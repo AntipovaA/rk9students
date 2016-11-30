@@ -1,4 +1,15 @@
+/*пример заполнени€ строки аргументов
+все размеры в миллиметрах
+x-35 -30 30 -30 30 -30 30 0.3 0 10.0
+argv[1] - не€вно заданна€ функци€, ограничивающа€ объем
+argv[2] - argv[7] - координаты вершин ограничивающего параллелепипеда
+argv[8] - шаг решетки при разбиении объема на точки
+argv[9] - тип элементарной €чейки
+argv[10] - размер элементарной €чейки
+*/
+
 #include <stdio.h>
+#include <string>
 #include "common/PolyModel.h"
 #include "MarchingCubes.h"
 #include "fparser.h"
@@ -7,9 +18,14 @@
 using namespace rk9;
 using namespace std;
 
+double pi = 3.1415926535897932384626433832795;
+
+struct PointFloat {
+	float X, Y, Z;
+};
 
 bool run(MarchingCubes &mc, float isoval, string function, 
-	double xmin, double xmax, double ymin, double ymax, double zmin, double zmax, double pace){
+	double xmin, double xmax, double ymin, double ymax, double zmin, double zmax, double pace, int cell_type, double cell_size){
 					
 	enum Axis { X = 0, Y = 1, Z = 2 };
 
@@ -29,6 +45,26 @@ bool run(MarchingCubes &mc, float isoval, string function,
 	glm::vec3 min_pos(xmin, ymin, zmin);
 	glm::vec3 range(rx, ry, rz);
 
+	//а - масштабный коэффициент
+	double a = 2 * pi / cell_size;
+
+	UnitCell * cell;
+	switch (cell_type)
+	{
+	case 0: cell = new SchwarzPrimitive(a);
+		break; 
+	case 1: cell = new SchwarzPrimitivePinched(a);
+		break; 
+	case 2: cell = new SchoenGyroid(a);
+		break;
+	case 3: cell = new SchwarzW(a);
+		break;
+	case 4: cell = new NeoviusSurface(a);
+		break;
+	default: cell = new SchwarzPrimitive(a);
+		break; 
+	} 
+
 	for (int i = 0; i < mc.size().x; i++) {
 		float val[5];
 		val[X] = (float)i * rx + xmin;
@@ -42,8 +78,7 @@ bool run(MarchingCubes &mc, float isoval, string function,
 				if (w > 0.0) {
 					mc.set_data(w, glm::ivec3(i, j, k)); }
 				if (w <= 0.0) {
-					Schwarz_W Cell;
-					double build_cell = Cell.Eval(val[X],val[Y],val[Z]);
+					double build_cell = cell -> Eval(val[X],val[Y],val[Z]);
 					mc.set_data(build_cell, glm::ivec3(i, j, k));
 				}
 			}
@@ -77,14 +112,26 @@ int main (int argc, char ** argv) {
 
 	double pace = stod(argv[8]);
 
-	int cells_count = (int) ((xmax - xmin) / pace);
-	
-	MarchingCubes mc(glm::ivec3(100));
-	mc.Setup();
-	run(mc, 0, function, xmin, xmax, ymin, ymax, zmin, zmax, pace);
+	/*выбор типа решетки
+	0 - Schwarz_Primitive;
+	1 - Schwarz_Primitive_pinched
+	2 - Schoen_Gyroid
+	3 - Schwarz_W
+	4 - Neovius_Surface
+	ѕо умолчанию строитс€ Schwarz_Primitive
+	*/
+	int cell_type = stoi(argv[9]);
+	double cell_size = stod(argv[10]);
 
-	auto verts = std::vector<glm::vec3>();
-	verts.reserve(mc.ntrigs() * 3);
+	int cells_count = (int) ((xmax - xmin) / pace);
+
+ 	MarchingCubes mc(glm::ivec3(cells_count, cells_count, cells_count));
+	mc.Setup();
+	run(mc, 0, function, xmin, xmax, ymin, ymax, zmin, zmax, pace, cell_type, cell_size);
+
+	vector<PointFloat> pts(mc.nverts());
+
+	mc.FreeUnusedArrays();
 
 	rk9::PolyModel m;
 
@@ -103,7 +150,9 @@ int main (int argc, char ** argv) {
 		m.AddTriangle(p[0], p[1], p[2]);
 	}
 
-	m.WriteToSTLFile("output.stl");
+	string filename = string("output") + to_string(cell_type) + string(" cell_size") + to_string(cell_size) + string(".stl");
+
+	m.WriteToSTLFile(filename.c_str());
 
 	return 0;
 }

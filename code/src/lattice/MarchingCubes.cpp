@@ -1,4 +1,15 @@
-﻿#include <math.h>
+﻿/**
+* @file    MarchingCubes.cpp
+* @author  Thomas Lewiner <thomas.lewiner@polytechnique.org>
+* @author  Math Dept, PUC-Rio
+* @version 0.2
+* @date    12/08/2002
+*
+* @brief   MarchingCubes Algorithm
+*/
+//________________________________________________
+
+#include <math.h>
 #include <time.h>
 #include <memory.h>
 #include <stdlib.h>
@@ -66,6 +77,14 @@ void MarchingCubes::Setup()
 	x_verts_.reserve(estimated_vertex_count);
 	y_verts_.reserve(estimated_vertex_count);
 	z_verts_.reserve(estimated_vertex_count);
+}
+
+void MarchingCubes::FreeUnusedArrays()
+{
+	x_verts_.clear();
+	y_verts_.clear();
+	z_verts_.clear();
+	data_.clear();
 }
 
 void CleanIsoDenormals(float *cube)
