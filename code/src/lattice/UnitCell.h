@@ -13,9 +13,9 @@ namespace rk9 {
 	class SchwarzPrimitive : public UnitCell {
 
 	private: const int type = 0;
-	public: double A, K;
-	
-			 SchwarzPrimitive() :
+		     double A, K;
+	public:		
+			SchwarzPrimitive() :
 				 A(1.0),
 				 K(1.0) {};
 
@@ -36,8 +36,9 @@ namespace rk9 {
 	class SchwarzPrimitivePinched : public UnitCell {
 
 	private: const int type = 1;
-	public: double A, K;
+	         double A, K;
 
+	public:	
 			SchwarzPrimitivePinched() :
 				A(1.0),
 				K(0.0) {};
@@ -59,8 +60,9 @@ namespace rk9 {
 	class SchoenGyroid : public UnitCell {
 
 	private: const int type = 2;
-	public: double A, K;
+	         double A, K;
 
+	public:
 			SchoenGyroid() :
 				A(1.0),
 				K(0.0) {};
@@ -83,8 +85,9 @@ namespace rk9 {
 	class SchwarzW : public UnitCell {
 
 	private: const int type = 3;
-	public: double A, K;
+			 double A, K;
 
+	public:
 			SchwarzW() :
 				A(1.0),
 				K(14.0) {};
@@ -106,8 +109,9 @@ namespace rk9 {
 	class NeoviusSurface : public UnitCell {
 
 	private: const int type = 4;
-	public: double A, K;
+			 double A, K;
 
+	public:
 			NeoviusSurface() :
 				A(1.0),
 				K(0.0) {};

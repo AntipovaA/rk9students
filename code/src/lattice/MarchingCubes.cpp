@@ -85,6 +85,7 @@ void MarchingCubes::FreeUnusedArrays()
 	y_verts_.clear();
 	z_verts_.clear();
 	data_.clear();
+	data_.shrink_to_fit();
 }
 
 void CleanIsoDenormals(float *cube)
